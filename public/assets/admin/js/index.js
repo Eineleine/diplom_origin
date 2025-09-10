@@ -83,6 +83,16 @@ async function updateHallPrice(el) {
   let token = el.dataset.token
   let halId = el.dataset.hallId
   let priceCollection = el.closest('.hall-price').querySelectorAll('.conf-step__input')
+ 
+  // Получаем значения цен
+  let priceStandart = priceCollection[0].value;
+  let priceVip = priceCollection[1].value;
+  
+  // Проверяем, что цены не отрицательные
+  if (priceStandart < 0 || priceVip < 0) {
+    showResponseMessage(['Цена не может быть отрицательной!'], 'error');
+    return;
+  }
 
   let response = await fetch('update_hall_price', {
     method: 'POST',
@@ -151,3 +161,15 @@ function showResponseMessage (result, status = 'success') {
   }
 }
 
+function closePopup(popup, form = null) {
+        popup.querySelectorAll('.popup__dismiss, .conf-step__button-regular').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                popup.classList.remove('active');
+                if (form) form.reset();
+            });
+        });
+    }
+
+    closePopup(popupAdd, formAdd);
+    closePopup(popupRemove);
